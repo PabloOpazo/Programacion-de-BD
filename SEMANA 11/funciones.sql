@@ -4,6 +4,34 @@ SET SERVEROUTPUT ON;
 CREATE OR REPLACE FUNCTION fn_total_edificios
 RETURN NUMBER IS
     total NUMBER;
+BEGI
+    SELECT COUNT(id_edif)
+    INTO total
+    FROM edificio;
+    
+    RETURN total;
+END;
+
+-- Probar la funci�n
+DECLARE
+    t NUMBER;
+BEGIN
+    t := fn_total_edificios();
+    DBMS_OUTPUT.PUT_LINE('Total de edificios ' || t);
+END;
+
+CREATE OR REPLACE PROCEDURE sp_total_ed_adm(p_rut NUMBER,
+p_total OUT NUMBER) IS
+BEGIN
+    SELECT COUNT(id_edif)
+    INTO p_total
+    FROM edificio
+SET SERVEROUTPUT ON;
+
+-- Construir la funcion almacenada
+CREATE OR REPLACE FUNCTION fn_total_edificios
+RETURN NUMBER IS
+    total NUMBER;
 BEGIN
     SELECT COUNT(id_edif)
     INTO total
@@ -68,5 +96,15 @@ END;
 
 CREATE OR REPLACE PROCEDURE sp_insertar(p_nombre VARCHAR2, p_total number, p_porcentaje NUMBER) IS
 BEGIN
-    INSERT INTO TABLA_RESULTADO VALUES (p_nombre, p_total, p_porcentaje);
+    EXECUTE IMMEDIATE 'TRUNCATE TABLE tabla_resultado';
+    INSERT INTO tabla_resultado VALUES (p_nombre, p_total, p_porcentaje);
 END;
+/*
+CREATE TABLE
+
+CREATE TABLE TABLA_RESULTADO
+(NOMBRE VARCHAR2(200),
+TOTAL NUMBER(20),
+PORCENTAJE NUMBER(20)
+);
+*/
